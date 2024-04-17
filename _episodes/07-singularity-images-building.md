@@ -1,36 +1,36 @@
 ---
-title: "Building Singularity images"
+title: "Building Apptainer images"
 teaching: 30
 exercises: 30
 questions:
-- "How do I create my own Singularity images?"
+- "How do I create my own Apptainer images?"
 objectives:
-- "Understand the different Singularity container file formats."
-- "Understand how to build and share your own Singularity containers."
+- "Understand the different Apptainer container file formats."
+- "Understand how to build and share your own Apptainer containers."
 keypoints:
-- "Singularity definition files are used to define the build process and configuration for an image."
-- "Singularity's Docker container provides a way to build images on a platform where Singularity is not installed but Docker is available."
-- "Existing images from remote registries such as Docker Hub and Singularity Hub can be used as a base for creating new Singularity images."
+- "Apptainer definition files are used to define the build process and configuration for an image."
+- "Apptainer's Docker container provides a way to build images on a platform where Apptainer is not installed but Docker is available."
+- "Existing images from remote registries such as Docker Hub and Apptainer Hub can be used as a base for creating new Apptainer images."
 ---
 
-## Building Singularity images
+## Building Apptainer images
 
 ### Introduction
 
-As a platform that is widely used in the scientific/research software and HPC communities, Singularity provides great support for reproducibility. If you build a Singularity image for some scientific software, it's likely that you and/or others will want to be able to reproduce exactly the same environment again. Maybe you want to verify the results of the code or provide a means that others can use to verify the results to support a paper or report. Maybe you're making a tool available to others and want to ensure that they have exactly the right version/configuration of the code.
+As a platform that is widely used in the scientific/research software and HPC communities, Apptainer provides great support for reproducibility. If you build a Apptainer image for some scientific software, it's likely that you and/or others will want to be able to reproduce exactly the same environment again. Maybe you want to verify the results of the code or provide a means that others can use to verify the results to support a paper or report. Maybe you're making a tool available to others and want to ensure that they have exactly the right version/configuration of the code.
 
-Similarly to Docker and many other modern software tools, Singularity follows the "Configuration as code" approach and a container configuration can be stored in a file which can then be committed to your version control system alongside other code. Assuming it is suitably configured, this file can then be used by you or other individuals (or by automated build tools) to reproduce a container with the same configuration at some point in the future.
+Similarly to Docker and many other modern software tools, Apptainer follows the "Configuration as code" approach and a container configuration can be stored in a file which can then be committed to your version control system alongside other code. Assuming it is suitably configured, this file can then be used by you or other individuals (or by automated build tools) to reproduce a container with the same configuration at some point in the future.
 
 ### Different approaches to building images
 
-There are various approaches to building Singularity images. We highlight two different approaches here and focus on one of them:
+There are various approaches to building Apptainer images. We highlight two different approaches here and focus on one of them:
 
  - _Building within a sandbox:_ You can build a container interactively within a sandbox environment. This means you get a shell within the container environment and install and configure packages and code as you wish before exiting the sandbox and converting it into a container image.
-- _Building from a [Singularity Definition File](https://sylabs.io/guides/3.5/user-guide/build_a_container.html#creating-writable-sandbox-directories)_: This is Singularity's equivalent to building a Docker container from a `Dockerfile` and we'll discuss this approach in this section.
+- _Building from a [Apptainer Definition File](https://sylabs.io/guides/3.5/user-guide/build_a_container.html#creating-writable-sandbox-directories)_: This is Apptainer's equivalent to building a Docker container from a `Dockerfile` and we'll discuss this approach in this section.
 
-You can take a look at Singularity's "[Build a Container](https://sylabs.io/guides/3.5/user-guide/build_a_container.html)" documentation for more details on different approaches to building containers.
+You can take a look at Apptainer's "[Build a Container](https://sylabs.io/guides/3.5/user-guide/build_a_container.html)" documentation for more details on different approaches to building containers.
 
-> ## Why look at Singularity Definition Files?
+> ## Why look at Apptainer Definition Files?
 > Why do you think we might be looking at the _definition file approach_ here rather than the _sandbox approach_?
 >
 > > ## Discussion
@@ -43,9 +43,9 @@ You can take a look at Singularity's "[Build a Container](https://sylabs.io/guid
 > {: .solution}
 {: .challenge}
 
-### Creating a Singularity Definition File
+### Creating a Apptainer Definition File
 
-A Singularity Definition File is a text file that contains a series of statements that are used to create a container image. In line with the _configuration as code_ approach mentioned above, the definition file can be stored in your code repository alongside your application code and used to create a reproducible image. This means that for a given commit in your repository, the version of the definition file present at that commit can be used to reproduce a container with a known state. It was pointed out earlier in the course, when covering Docker, that this property also applies for Dockerfiles.
+A Apptainer Definition File is a text file that contains a series of statements that are used to create a container image. In line with the _configuration as code_ approach mentioned above, the definition file can be stored in your code repository alongside your application code and used to create a reproducible image. This means that for a given commit in your repository, the version of the definition file present at that commit can be used to reproduce a container with a known state. It was pointed out earlier in the course, when covering Docker, that this property also applies for Dockerfiles.
 
 We'll now look at a very simple example of a definition file:
 
@@ -57,11 +57,11 @@ From: ubuntu:20.04
     apt-get -y update && apt-get install -y python
 
 %runscript
-    python -c 'print("Hello World! Hello from our custom Singularity image!")'
+    python -c 'print("Hello World! Hello from our custom Apptainer image!")'
 ~~~
 {: .language-bash}
 
-A definition file has a number of optional sections, specified using the `%` prefix, that are used to define or undertake different configuration during different stages of the image build process. You can find full details in Singularity's [Definition Files documentation](https://sylabs.io/guides/3.5/user-guide/definition_files.html). In our very simple example here, we only use the `%post` and `%runscript` sections.
+A definition file has a number of optional sections, specified using the `%` prefix, that are used to define or undertake different configuration during different stages of the image build process. You can find full details in Apptainer's [Definition Files documentation](https://sylabs.io/guides/3.5/user-guide/definition_files.html). In our very simple example here, we only use the `%post` and `%runscript` sections.
 
 Let's step through this definition file and look at the lines in more detail:
 
@@ -71,9 +71,9 @@ From: ubuntu:20.04
 ~~~
 {: .language-bash}
 
-These first two lines define where to _bootstrap_ our image from. Why can't we just put some application binaries into a blank image? Any applications or tools that we want to run will need to interact with standard system libraries and potentially a wide range of other libraries and tools. These need to be available within the image and we therefore need some sort of operating system as the basis for our image. The most straightforward way to achieve this is to start from an existing base image containing an operating system. In this case, we're going to start from a minimal Ubuntu 20.04 Linux Docker image. Note that we're using a Docker image as the basis for creating a Singularity image. This demonstrates the flexibility in being able to start from different types of images when creating a new Singularity image.
+These first two lines define where to _bootstrap_ our image from. Why can't we just put some application binaries into a blank image? Any applications or tools that we want to run will need to interact with standard system libraries and potentially a wide range of other libraries and tools. These need to be available within the image and we therefore need some sort of operating system as the basis for our image. The most straightforward way to achieve this is to start from an existing base image containing an operating system. In this case, we're going to start from a minimal Ubuntu 20.04 Linux Docker image. Note that we're using a Docker image as the basis for creating a Apptainer image. This demonstrates the flexibility in being able to start from different types of images when creating a new Apptainer image.
 
-The `Bootstrap: docker` line is similar to prefixing an image path with `docker://` when using, for example, the `singularity pull` command. A range of [different bootstrap options](https://sylabs.io/guides/3.5/user-guide/definition_files.html#preferred-bootstrap-agents) are supported. `From: ubuntu:20.04` says that we want to use the `ubuntu` image with the tag `20.04` from Docker Hub.
+The `Bootstrap: docker` line is similar to prefixing an image path with `docker://` when using, for example, the `apptainer pull` command. A range of [different bootstrap options](https://sylabs.io/guides/3.5/user-guide/definition_files.html#preferred-bootstrap-agents) are supported. `From: ubuntu:20.04` says that we want to use the `ubuntu` image with the tag `20.04` from Docker Hub.
 
 Next we have the `%post` section of the definition file:
 
@@ -91,27 +91,27 @@ Finally we have the `%runscript` section:
 
 ~~~
 %runscript
-    python3 -c 'print("Hello World! Hello from our custom Singularity image!")'
+    python3 -c 'print("Hello World! Hello from our custom Apptainer image!")'
 ~~~
 {: .language-bash}
 
-This section is used to define a script that should be run when a container is started based on this image using the `singularity run` command. In this simple example we use `python3` to print out some text to the console.
+This section is used to define a script that should be run when a container is started based on this image using the `apptainer run` command. In this simple example we use `python3` to print out some text to the console.
 
-We can now save the contents of the simple defintion file shown above to a file and build an image based on it. In the case of this example, the definition file has been named `my_test_image.def`. (Note that the instructions here assume you've bound the image output directory you created to the `/home/singularity` directory in your Docker Singularity container, as explained in the "[_Getting started with the Docker Singularity image_](#getting-started-with-the-docker-singularity-image)" section above.):
+We can now save the contents of the simple defintion file shown above to a file and build an image based on it. In the case of this example, the definition file has been named `my_test_image.def`. (Note that the instructions here assume you've bound the image output directory you created to the `/home/apptainer` directory in your Docker Apptainer container, as explained in the "[_Getting started with the Docker Apptainer image_](#getting-started-with-the-docker-apptainer-image)" section above.):
 
 ~~~
-$ singularity build /home/singularity/my_test_image.sif /home/singularity/my_test_image.def
+$ apptainer build /home/apptainer/my_test_image.sif /home/apptainer/my_test_image.def
 ~~~
 {: .language-bash}
 
 Recall from the details at the start of this section that if you are running your command from the host system command line, running an instance of a Docker container for each run of the command, your command will look something like this:
 
 ~~~
-$ docker run --privileged --rm -v ${PWD}:/home/singularity quay.io/singularity/singularity:v3.5.3-slim build /home/singularity/my_test_image.sif /home/singularity/my_test_image.def
+$ docker run --privileged --rm -v ${PWD}:/home/apptainer quay.io/apptainer/apptainer:v3.5.3-slim build /home/apptainer/my_test_image.sif /home/apptainer/my_test_image.def
 ~~~
 {: .language-bash}
 
-The above command requests the building of an image based on the `my_test_image.def` file with the resulting image saved to the `my_test_image.sif` file. Note that you will need to prefix the command with `sudo` if you're running a locally installed version of Singularity and not running via Docker because it is necessary to have administrative privileges to build the image. You should see output similar to the following:
+The above command requests the building of an image based on the `my_test_image.def` file with the resulting image saved to the `my_test_image.sif` file. Note that you will need to prefix the command with `sudo` if you're running a locally installed version of Apptainer and not running via Docker because it is necessary to have administrative privileges to build the image. You should see output similar to the following:
 
 ~~~
 INFO:    Starting build...
@@ -151,21 +151,21 @@ You should now have a `my_test_image.sif` file in the current directory. Note th
 
 > ## Permissions of the created image file
 >
-> You may find that the created Singularity image file on your host filesystem is owned by the `root` user and not your user. In this case, you won't be able to change the ownership/permissions of the file directly if you don't have root access.
+> You may find that the created Apptainer image file on your host filesystem is owned by the `root` user and not your user. In this case, you won't be able to change the ownership/permissions of the file directly if you don't have root access.
 >
 > However, the image file will be readable by you and you should be able to take a copy of the file under a new name which you will then own. You will then be able to modify the permissions of this copy of the image and delete the original root-owned file since the default permissions should allow this.
 > 
 {: .callout}
 
-> ## Cluster platform configuration for running Singularity containers
+> ## Cluster platform configuration for running Apptainer containers
 >
-> _**Note to instructors:** Add details into this box of any custom configuration that needs to be done on the cluster platform or other remote system that you're providing access to for the purpose of undertaking this course. If `singularity` does not require any custom configuration by the user on the host platform, you can remove this box._
+> _**Note to instructors:** Add details into this box of any custom configuration that needs to be done on the cluster platform or other remote system that you're providing access to for the purpose of undertaking this course. If `apptainer` does not require any custom configuration by the user on the host platform, you can remove this box._
 > 
 {: .callout}
 
-It is recommended that you move the created `.sif` file to a platform with an installation of Singularity, rather than attempting to run the image using the Docker container. However, if you do wish to try using the Docker container, see the notes below on "_Using singularity run from within the Docker container_" for further information.
+It is recommended that you move the created `.sif` file to a platform with an installation of Apptainer, rather than attempting to run the image using the Docker container. However, if you do wish to try using the Docker container, see the notes below on "_Using apptainer run from within the Docker container_" for further information.
 
-If you have access to a remote platform with Singularity installed on it, you should now move your created `.sif` image file to this platform. You could, for example, do this using the command line secure copy command `scp`.
+If you have access to a remote platform with Apptainer installed on it, you should now move your created `.sif` image file to this platform. You could, for example, do this using the command line secure copy command `scp`.
 
 > ## Using `scp` (secure copy) to copy files between systems
 >
@@ -183,22 +183,22 @@ If you have access to a remote platform with Singularity installed on it, you sh
 We can now attempt to run a container from the image that we built:
 
 ~~~
-$ singularity run my_test_image.sif
+$ apptainer run my_test_image.sif
 ~~~
 {: .language-bash}
 
 If everything worked successfully, you should see the message printed by Python:
 
 ~~~
-Hello World! Hello from our custom Singularity image!
+Hello World! Hello from our custom Apptainer image!
 ~~~
 {: .output}
 
-> ## Using `singularity run` from within the Docker container
+> ## Using `apptainer run` from within the Docker container
 >
-> It is strongly recommended that you don't use the Docker container for running Singularity images, only for creating them, since the Singularity command runs within the container as the root user.
+> It is strongly recommended that you don't use the Docker container for running Apptainer images, only for creating them, since the Apptainer command runs within the container as the root user.
 > 
-> However, for the purposes of this simple example, and potentially for testing/debugging purposes it is useful to know how to run a Singularity container within the Docker Singularity container. You may recall from the [Running a container from the image](/06-singularity-images-prep/index.html#running-a-container-from-the-image) section in the previous episode that we used the `--contain` switch with the `singularity` command. If you don't use this switch, it is likely that you will get an error relating to `/etc/localtime` similar to the following:
+> However, for the purposes of this simple example, and potentially for testing/debugging purposes it is useful to know how to run a Apptainer container within the Docker Apptainer container. You may recall from the [Running a container from the image](/06-apptainer-images-prep/index.html#running-a-container-from-the-image) section in the previous episode that we used the `--contain` switch with the `apptainer` command. If you don't use this switch, it is likely that you will get an error relating to `/etc/localtime` similar to the following:
 >
 > ~~~
 > WARNING: skipping mount of /etc/localtime: no such file or directory
@@ -214,7 +214,7 @@ Hello World! Hello from our custom Singularity image!
 > ~~~
 > {: .language-bash}
 > 
-> The `singularity run` command should now work successfully without needing to use `--contain`. Bear in mind that once you exit the Docker Singularity container shell and shutdown the container, this configuration will not persist.
+> The `apptainer run` command should now work successfully without needing to use `--contain`. Bear in mind that once you exit the Docker Apptainer container shell and shutdown the container, this configuration will not persist.
 {: .callout}
 
 
@@ -232,11 +232,11 @@ Here we've looked at a very simple example of how to create an image. At this st
 
 The [`Sections` part of the definition file documentation](https://sylabs.io/guides/3.5/user-guide/definition_files.html#sections) details all the sections and provides an example definition file that makes use of all the sections.
 
-### Additional Singularity features
+### Additional Apptainer features
 
-Singularity has a wide range of features. You can find full details in the [Singularity User Guide](https://sylabs.io/guides/3.5/user-guide/index.html) and we highlight a couple of key features here that may be of use/interest:
+Apptainer has a wide range of features. You can find full details in the [Apptainer User Guide](https://sylabs.io/guides/3.5/user-guide/index.html) and we highlight a couple of key features here that may be of use/interest:
 
-**Remote Builder Capabilities:** If you have access to a platform with Singularity installed but you don't have root access to create containers, you may be able to use the [Remote Builder](https://cloud.sylabs.io/builder) functionality to offload the process of building an image to remote cloud resources. You'll need to register for a _cloud token_ via the link on the [Remote Builder](https://cloud.sylabs.io/builder) page.
+**Remote Builder Capabilities:** If you have access to a platform with Apptainer installed but you don't have root access to create containers, you may be able to use the [Remote Builder](https://cloud.sylabs.io/builder) functionality to offload the process of building an image to remote cloud resources. You'll need to register for a _cloud token_ via the link on the [Remote Builder](https://cloud.sylabs.io/builder) page.
 
-**Signing containers:** If you do want to share container image (`.sif`) files directly with colleagues or collaborators, how can the people you send an image to be sure that they have received the file without it being tampered with or suffering from corruption during transfer/storage? And how can you be sure that the same goes for any container image file you receive from others? Singularity supports signing containers. This allows a digital signature to be linked to an image file. This signature can be used to verify that an image file has been signed by the holder of a specific key and that the file is unchanged from when it was signed. You can find full details of how to use this functionality in the Singularity documentation on [Signing and Verifying Containers](https://sylabs.io/guides/3.0/user-guide/signNverify.html).
+**Signing containers:** If you do want to share container image (`.sif`) files directly with colleagues or collaborators, how can the people you send an image to be sure that they have received the file without it being tampered with or suffering from corruption during transfer/storage? And how can you be sure that the same goes for any container image file you receive from others? Apptainer supports signing containers. This allows a digital signature to be linked to an image file. This signature can be used to verify that an image file has been signed by the holder of a specific key and that the file is unchanged from when it was signed. You can find full details of how to use this functionality in the Apptainer documentation on [Signing and Verifying Containers](https://sylabs.io/guides/3.0/user-guide/signNverify.html).
 

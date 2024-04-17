@@ -1,25 +1,25 @@
 ---
-title: "Using Docker images with Singularity"
+title: "Using Docker images with Apptainer"
 teaching: 5
 exercises: 10
 questions:
-- "How do I use Docker images with Singularity?"
+- "How do I use Docker images with Apptainer?"
 objectives:
-- "Learn how to run Singularity containers based on Docker images."
+- "Learn how to run Apptainer containers based on Docker images."
 keypoints:
-- "Singularity can start a container from a Docker image which can be pulled directly from Docker Hub."
+- "Apptainer can start a container from a Docker image which can be pulled directly from Docker Hub."
 ---
 
-## Using Docker images with Singularity
+## Using Docker images with Apptainer
 
-Singularity can also start containers directly from Docker images, opening up access to a huge number of existing container images available on [Docker Hub](https://hub.docker.com/) and other registries.
+Apptainer can also start containers directly from Docker images, opening up access to a huge number of existing container images available on [Docker Hub](https://hub.docker.com/) and other registries.
 
-While Singularity doesn't actually run a container using the Docker image (it first converts it to a format suitable for use by Singularity), the approach used provides a seamless experience for the end user. When you direct Singularity to run a container based on pull a Docker image, Singularity pulls the slices or _layers_ that make up the Docker image and converts them into a single-file Singularity SIF image.
+While Apptainer doesn't actually run a container using the Docker image (it first converts it to a format suitable for use by Apptainer), the approach used provides a seamless experience for the end user. When you direct Apptainer to run a container based on pull a Docker image, Apptainer pulls the slices or _layers_ that make up the Docker image and converts them into a single-file Apptainer SIF image.
 
 For example, moving on from the simple _Hello World_ examples that we've looked at so far, let's pull one of the [official Docker Python images](https://hub.docker.com/_/python). We'll use the image with the tag `3.9.6-slim-buster` which has Python 3.9.6 installed on Debian's [Buster](https://www.debian.org/releases/buster/) (v10) Linux distribution:
 
 ~~~
-$ singularity pull python-3.9.6.sif docker://python:3.9.6-slim-buster
+$ apptainer pull python-3.9.6.sif docker://python:3.9.6-slim-buster
 ~~~
 {: .language-bash}
 
@@ -44,9 +44,9 @@ INFO:    Creating SIF file...
 ~~~
 {: .output}
 
-Note how we see singularity saying that it's "_Converting OCI blobs to SIF format_". We then see the layers of the Docker image being downloaded and unpacked and written into a single SIF file. Once the process is complete, we should see the python-3.9.6.sif image file in the current directory.
+Note how we see apptainer saying that it's "_Converting OCI blobs to SIF format_". We then see the layers of the Docker image being downloaded and unpacked and written into a single SIF file. Once the process is complete, we should see the python-3.9.6.sif image file in the current directory.
 
-We can now run a container from this image as we would with any other singularity image.
+We can now run a container from this image as we would with any other apptainer image.
 
 > ## Running the Python 3.9.6 image that we just pulled from Docker Hub
 >
@@ -57,7 +57,7 @@ We can now run a container from this image as we would with any other singularit
 > > ## Running the Python 3.9.6 image
 > >
 > > ~~~
-> > $ singularity run python-3.9.6.sif
+> > $ apptainer run python-3.9.6.sif
 > > ~~~
 > > {: .language-bash}
 > > 
@@ -84,26 +84,26 @@ In addition to running a container and having it run the default run script, you
 
 > ## Open a shell within a Python container
 >
-> Try to run a shell within a singularity container based on the `python-3.9.6.sif` image. That is, run a container that opens a shell rather than the default Python interactive console as we saw above.
+> Try to run a shell within a apptainer container based on the `python-3.9.6.sif` image. That is, run a container that opens a shell rather than the default Python interactive console as we saw above.
 > See if you can find more than one way to achieve this.
 > 
 > Within the shell, try starting the Python interactive console and running some Python commands.
 > 
 > > ## Solution
 > >
-> > Recall from the earlier material that we can use the `singularity shell` command to open a shell within a container. To open a regular shell within a container based on the `python-3.9.6.sif` image, we can therefore simply run:
+> > Recall from the earlier material that we can use the `apptainer shell` command to open a shell within a container. To open a regular shell within a container based on the `python-3.9.6.sif` image, we can therefore simply run:
 > > ~~~
-> > $ singularity shell python-3.9.6.sif
+> > $ apptainer shell python-3.9.6.sif
 > > ~~~
 > > {: .language-bash}
 > > 
 > > ~~~
-> > Singularity> echo $SHELL
+> > Apptainer> echo $SHELL
 > > /bin/bash
-> > Singularity> cat /etc/issue
+> > Apptainer> cat /etc/issue
 > > Debian GNU/Linux 10 \n \l
 > > 
-> > Singularity> python
+> > Apptainer> python
 > > Python 3.9.6 (default, Jul 22 2021, 15:24:21) 
 > > [GCC 8.3.0] on linux
 > > Type "help", "copyright", "credits" or "license" for more information.
@@ -111,20 +111,20 @@ In addition to running a container and having it run the default run script, you
 > > Hello World!
 > > >>> exit()
 > > 
-> > Singularity> exit
+> > Apptainer> exit
 > > $ 
 > > ~~~
 > > {: .output}
 > > 
-> > It is also possible to use the `singularity exec` command to run an executable within a container. We could, therefore, use the `exec` command to run `/bin/bash`:
+> > It is also possible to use the `apptainer exec` command to run an executable within a container. We could, therefore, use the `exec` command to run `/bin/bash`:
 > > 
 > > ~~~
-> > $ singularity exec python-3.9.6.sif /bin/bash
+> > $ apptainer exec python-3.9.6.sif /bin/bash
 > > ~~~
 > > {: .language-bash}
 > > 
 > > ~~~
-> > Singularity> echo $SHELL
+> > Apptainer> echo $SHELL
 > > /bin/bash
 > > ~~~
 > > {: .output}
@@ -133,8 +133,8 @@ In addition to running a container and having it run the default run script, you
 > {: .solution}
 {: .challenge}
 
-This concludes the fifth episode and Part I of the Singularity material. Part II contains a further three episodes where we'll look at creating your own images and then more advanced use of containers for running MPI parallel applications.
+This concludes the fifth episode and Part I of the Apptainer material. Part II contains a further three episodes where we'll look at creating your own images and then more advanced use of containers for running MPI parallel applications.
 
 ## References
 
-\[1\] Gregory M. Kurzer, Containers for Science, Reproducibility and Mobility: Singularity P2. Intel HPC Developer Conference, 2017. Available at: https://www.intel.com/content/dam/www/public/us/en/documents/presentation/hpc-containers-singularity-advanced.pdf
+\[1\] Gregory M. Kurzer, Containers for Science, Reproducibility and Mobility: Apptainer P2. Intel HPC Developer Conference, 2017. Available at: https://www.intel.com/content/dam/www/public/us/en/documents/presentation/hpc-containers-apptainer-advanced.pdf
