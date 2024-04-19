@@ -46,34 +46,29 @@ We'll build an image from a definition file. Containers based on this image will
 
 In this example, the target platform is a remote HPC cluster that uses [Intel MPI](https://software.intel.com/content/www/us/en/develop/tools/mpi-library.html). The container can be built via the Apptainer Docker image that we used in the previous episode of the Apptainer material.
 
-Begin by creating a directory and, within that directory, downloading and saving the "tarballs" for version 5.7.1 of the OSU Micro-Benchmarks from the [OSU Micro-Benchmarks page](https://mvapich.cse.ohio-state.edu/benchmarks/) and for MPICH version 3.4.2 from the [MPICH downloads page](https://www.mpich.org/downloads/).
+Begin by creating a directory and, within that directory, downloading and saving the "tarball" for version 7.3 of the OSU Micro-Benchmarks from the [OSU Micro-Benchmarks page](https://mvapich.cse.ohio-state.edu/benchmarks/).
 
 In the same directory, save the following definition file content to a `.def` file, e.g. `osu_benchmarks.def`:
 
 ~~~
 Bootstrap: docker
-From: ubuntu:20.04
+From: almalinux:8.9
 
 %files
-    /home/apptainer/osu-micro-benchmarks-5.7.1.tgz /root/
-    /home/apptainer/mpich-3.4.2.tar.gz /root/
+    /home/apptainer/osu-micro-benchmarks-7.3.tar.gz /root/
 
 %environment
     export SINGULARITY_MPICH_DIR=/usr
     export OSU_DIR=/usr/local/osu/libexec/osu-micro-benchmarks/mpi
 
 %post
-    apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get -y install build-essential libfabric-dev libibverbs-dev gfortran
+    yum update -y && yum install -y gcc gcc-c++ make openmpi
     cd /root
-    tar zxvf mpich-3.4.2.tar.gz && cd mpich-3.4.2
-    echo "Configuring and building MPICH..."
-    ./configure --prefix=/usr --with-device=ch3:nemesis:ofi && make -j2 && make install
-    cd /root
-    tar zxvf osu-micro-benchmarks-5.7.1.tgz
-    cd osu-micro-benchmarks-5.7.1/
+    tar zxvf osu-micro-benchmarks-7.3.tar.gz
+    cd osu-micro-benchmarks-7.3/
     echo "Configuring and building OSU Micro-Benchmarks..."
-    ./configure --prefix=/usr/local/osu CC=/usr/bin/mpicc CXX=/usr/bin/mpicxx
-    make -j2 && make install
+    ./configure --prefix=/usr/local/osu CC=/usr/lib64/openmpi/bin/mpicc CXX=/usr/lib64/openmpi/bin/mpicxx
+    make -j16 && make install
 
 %runscript
     echo "Rank ${PMI_RANK} - About to run: ${OSU_DIR}/$*"
