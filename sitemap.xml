@@ -46,6 +46,9 @@
     <loc>https://preview.carpentries.org/singularity-introduction/figures.html</loc>
   </url>
   <url>
+    <loc>https://preview.carpentries.org/singularity-introduction/images.html</loc>
+  </url>
+  <url>
     <loc>https://preview.carpentries.org/singularity-introduction/index.html</loc>
   </url>
   <url>
@@ -94,13 +97,28 @@
     <loc>https://preview.carpentries.org/singularity-introduction/instructor/figures.html</loc>
   </url>
   <url>
+    <loc>https://preview.carpentries.org/singularity-introduction/instructor/images.html</loc>
+  </url>
+  <url>
     <loc>https://preview.carpentries.org/singularity-introduction/instructor/index.html</loc>
+  </url>
+  <url>
+    <loc>https://preview.carpentries.org/singularity-introduction/instructor/instructor-notes.html</loc>
+  </url>
+  <url>
+    <loc>https://preview.carpentries.org/singularity-introduction/instructor/key-points.html</loc>
   </url>
   <url>
     <loc>https://preview.carpentries.org/singularity-introduction/instructor/profiles.html</loc>
   </url>
   <url>
     <loc>https://preview.carpentries.org/singularity-introduction/instructor/reference.html</loc>
+  </url>
+  <url>
+    <loc>https://preview.carpentries.org/singularity-introduction/instructor-notes.html</loc>
+  </url>
+  <url>
+    <loc>https://preview.carpentries.org/singularity-introduction/key-points.html</loc>
   </url>
   <url>
     <loc>https://preview.carpentries.org/singularity-introduction/profiles.html</loc>
